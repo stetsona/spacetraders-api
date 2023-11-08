@@ -1,6 +1,6 @@
 {
   "name": "@stetsona/spacetraders-api",
-  "version": "1.0.0",
+  "version": "0.0.1-beta",
   "description": "openapi generated api",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
