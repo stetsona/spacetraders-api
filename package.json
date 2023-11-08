@@ -8,8 +8,9 @@
   "files": [
     "dist"
   ],
-  "publishConfig": {
-    "@stetsona:registry": "https://npm.pkg.github.com"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/stetsona/spacetraders-api.git"
   },
   "scripts": {
     "build": "tsup",
