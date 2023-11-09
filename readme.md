@@ -1,5 +1,7 @@
 ## A typescript wrap of the spacetraders openapi spec
 
+[SpaceTraders API](https://spacetraders.stoplight.io/docs/spacetraders/)
+
 ### Windows Instructions for building
 
 Install openapi-generator-cli (only needs to be done once):
