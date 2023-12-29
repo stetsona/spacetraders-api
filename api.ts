@@ -56,7 +56,7 @@ export interface AcceptContract200ResponseData {
     'contract': Contract;
 }
 /**
- * The activity level of a trade good. If the good is an import, this represents how strong consumption is for the good. If the good is an export, this represents how strong the production is for the good.
+ * The activity level of a trade good. If the good is an import, this represents how strong consumption is. If the good is an export, this represents how strong the production is for the good. When activity is strong, consumption or production is near maximum capacity. When activity is weak, consumption or production is near minimum capacity.
  * @export
  * @enum {string}
  */
@@ -64,7 +64,8 @@ export interface AcceptContract200ResponseData {
 export const ActivityLevel = {
     Weak: 'WEAK',
     Growing: 'GROWING',
-    Strong: 'STRONG'
+    Strong: 'STRONG',
+    Restricted: 'RESTRICTED'
 } as const;
 
 export type ActivityLevel = typeof ActivityLevel[keyof typeof ActivityLevel];
@@ -111,7 +112,7 @@ export interface Agent {
      * @type {number}
      * @memberof Agent
      */
-    'shipCount'?: number;
+    'shipCount': number;
 }
 /**
  * The chart of a system or waypoint, which makes the location visible to other agents.
@@ -287,7 +288,7 @@ export interface ContractDeliverGood {
     'unitsFulfilled': number;
 }
 /**
- * 
+ * Payments for the contract.
  * @export
  * @interface ContractPayment
  */
@@ -306,7 +307,7 @@ export interface ContractPayment {
     'onFulfilled': number;
 }
 /**
- * Terms of the contract needed to fulfill it.
+ * The terms to fulfill the contract.
  * @export
  * @interface ContractTerms
  */
@@ -690,10 +691,10 @@ export interface ExtractionYield {
 export interface Faction {
     /**
      * 
-     * @type {FactionSymbols}
+     * @type {FactionSymbol}
      * @memberof Faction
      */
-    'symbol': FactionSymbols;
+    'symbol': FactionSymbol;
     /**
      * Name of the faction.
      * @type {string}
@@ -733,7 +734,7 @@ export interface Faction {
  * @enum {string}
  */
 
-export const FactionSymbols = {
+export const FactionSymbol = {
     Cosmic: 'COSMIC',
     Void: 'VOID',
     Galactic: 'GALACTIC',
@@ -755,7 +756,7 @@ export const FactionSymbols = {
     Ethereal: 'ETHEREAL'
 } as const;
 
-export type FactionSymbols = typeof FactionSymbols[keyof typeof FactionSymbols];
+export type FactionSymbol = typeof FactionSymbol[keyof typeof FactionSymbol];
 
 
 /**
@@ -765,11 +766,11 @@ export type FactionSymbols = typeof FactionSymbols[keyof typeof FactionSymbols];
  */
 export interface FactionTrait {
     /**
-     * The unique identifier of the trait.
-     * @type {string}
+     * 
+     * @type {FactionTraitSymbol}
      * @memberof FactionTrait
      */
-    'symbol': FactionTraitSymbolEnum;
+    'symbol': FactionTraitSymbol;
     /**
      * The name of the trait.
      * @type {string}
@@ -784,7 +785,14 @@ export interface FactionTrait {
     'description': string;
 }
 
-export const FactionTraitSymbolEnum = {
+
+/**
+ * The unique identifier of the trait.
+ * @export
+ * @enum {string}
+ */
+
+export const FactionTraitSymbol = {
     Bureaucratic: 'BUREAUCRATIC',
     Secretive: 'SECRETIVE',
     Capitalistic: 'CAPITALISTIC',
@@ -846,7 +854,8 @@ export const FactionTraitSymbolEnum = {
     Entrepreneurial: 'ENTREPRENEURIAL'
 } as const;
 
-export type FactionTraitSymbolEnum = typeof FactionTraitSymbolEnum[keyof typeof FactionTraitSymbolEnum];
+export type FactionTraitSymbol = typeof FactionTraitSymbol[keyof typeof FactionTraitSymbol];
+
 
 /**
  * 
@@ -1335,7 +1344,7 @@ export interface GetSystemWaypoints200Response {
  * @type GetSystemWaypointsTraitsParameter
  * @export
  */
-export type GetSystemWaypointsTraitsParameter = Array<WaypointTrait> | WaypointTrait;
+export type GetSystemWaypointsTraitsParameter = Array<WaypointTraitSymbol> | WaypointTraitSymbol;
 
 /**
  * 
@@ -1480,6 +1489,12 @@ export interface JettisonRequest {
  */
 export interface JumpGate {
     /**
+     * The symbol of the waypoint.
+     * @type {string}
+     * @memberof JumpGate
+     */
+    'symbol': string;
+    /**
      * All the gates that are connected to this waypoint.
      * @type {Array<string>}
      * @memberof JumpGate
@@ -1523,6 +1538,12 @@ export interface JumpShip200ResponseData {
      * @memberof JumpShip200ResponseData
      */
     'transaction': MarketTransaction;
+    /**
+     * 
+     * @type {Agent}
+     * @memberof JumpShip200ResponseData
+     */
+    'agent': Agent;
 }
 /**
  * 
@@ -1645,7 +1666,7 @@ export type MarketTradeGoodTypeEnum = typeof MarketTradeGoodTypeEnum[keyof typeo
  */
 export interface MarketTransaction {
     /**
-     * The symbol of the waypoint where the transaction took place.
+     * The symbol of the waypoint.
      * @type {string}
      * @memberof MarketTransaction
      */
@@ -1981,6 +2002,12 @@ export interface RefuelShipRequest {
      * @memberof RefuelShipRequest
      */
     'units'?: number;
+    /**
+     * Wether to use the FUEL thats in your cargo or not. Default: false
+     * @type {boolean}
+     * @memberof RefuelShipRequest
+     */
+    'fromCargo'?: boolean;
 }
 /**
  * 
@@ -2040,10 +2067,10 @@ export interface Register201ResponseData {
 export interface RegisterRequest {
     /**
      * 
-     * @type {FactionSymbols}
+     * @type {FactionSymbol}
      * @memberof RegisterRequest
      */
-    'faction': FactionSymbols;
+    'faction': FactionSymbol;
     /**
      * Your desired agent symbol. This will be a unique name used to represent your agent, and will be the prefix for your ships.
      * @type {string}
@@ -2269,7 +2296,7 @@ export interface ScannedSystem {
  */
 export interface ScannedWaypoint {
     /**
-     * Symbol of the waypoint.
+     * The symbol of the waypoint.
      * @type {string}
      * @memberof ScannedWaypoint
      */
@@ -2281,7 +2308,7 @@ export interface ScannedWaypoint {
      */
     'type': WaypointType;
     /**
-     * Symbol of the system.
+     * The symbol of the system.
      * @type {string}
      * @memberof ScannedWaypoint
      */
@@ -2940,13 +2967,13 @@ export type ShipMountDepositsEnum = typeof ShipMountDepositsEnum[keyof typeof Sh
  */
 export interface ShipNav {
     /**
-     * The system symbol of the ship\'s current location.
+     * The symbol of the system.
      * @type {string}
      * @memberof ShipNav
      */
     'systemSymbol': string;
     /**
-     * The waypoint symbol of the ship\'s current location, or if the ship is in-transit, the waypoint symbol of the ship\'s destination.
+     * The symbol of the waypoint.
      * @type {string}
      * @memberof ShipNav
      */
@@ -3005,12 +3032,6 @@ export interface ShipNavRoute {
      * @type {ShipNavRouteWaypoint}
      * @memberof ShipNavRoute
      */
-    'departure': ShipNavRouteWaypoint;
-    /**
-     * 
-     * @type {ShipNavRouteWaypoint}
-     * @memberof ShipNavRoute
-     */
     'origin': ShipNavRouteWaypoint;
     /**
      * The date time of the ship\'s departure.
@@ -3044,7 +3065,7 @@ export interface ShipNavRouteWaypoint {
      */
     'type': WaypointType;
     /**
-     * The symbol of the system the waypoint is in.
+     * The symbol of the system.
      * @type {string}
      * @memberof ShipNavRouteWaypoint
      */
@@ -3374,7 +3395,7 @@ export interface ShipyardShip {
      * @type {ShipType}
      * @memberof ShipyardShip
      */
-    'type'?: ShipType;
+    'type': ShipType;
     /**
      * 
      * @type {string}
@@ -3474,7 +3495,7 @@ export interface ShipyardShipTypesInner {
      * @type {ShipType}
      * @memberof ShipyardShipTypesInner
      */
-    'type'?: ShipType;
+    'type': ShipType;
 }
 
 
@@ -3485,7 +3506,7 @@ export interface ShipyardShipTypesInner {
  */
 export interface ShipyardTransaction {
     /**
-     * The symbol of the waypoint where the transaction took place.
+     * The symbol of the waypoint.
      * @type {string}
      * @memberof ShipyardTransaction
      */
@@ -3494,8 +3515,15 @@ export interface ShipyardTransaction {
      * The symbol of the ship that was the subject of the transaction.
      * @type {string}
      * @memberof ShipyardTransaction
+     * @deprecated
      */
     'shipSymbol': string;
+    /**
+     * The symbol of the ship that was the subject of the transaction.
+     * @type {string}
+     * @memberof ShipyardTransaction
+     */
+    'shipType': string;
     /**
      * The price of the transaction.
      * @type {number}
@@ -3596,32 +3624,32 @@ export interface SiphonYield {
 /**
  * 
  * @export
- * @interface SupplyConstruction200Response
+ * @interface SupplyConstruction201Response
  */
-export interface SupplyConstruction200Response {
+export interface SupplyConstruction201Response {
     /**
      * 
-     * @type {SupplyConstruction200ResponseData}
-     * @memberof SupplyConstruction200Response
+     * @type {SupplyConstruction201ResponseData}
+     * @memberof SupplyConstruction201Response
      */
-    'data': SupplyConstruction200ResponseData;
+    'data': SupplyConstruction201ResponseData;
 }
 /**
  * 
  * @export
- * @interface SupplyConstruction200ResponseData
+ * @interface SupplyConstruction201ResponseData
  */
-export interface SupplyConstruction200ResponseData {
+export interface SupplyConstruction201ResponseData {
     /**
      * 
      * @type {Construction}
-     * @memberof SupplyConstruction200ResponseData
+     * @memberof SupplyConstruction201ResponseData
      */
     'construction': Construction;
     /**
      * 
      * @type {ShipCargo}
-     * @memberof SupplyConstruction200ResponseData
+     * @memberof SupplyConstruction201ResponseData
      */
     'cargo': ShipCargo;
 }
@@ -3785,15 +3813,15 @@ export interface System {
 export interface SystemFaction {
     /**
      * 
-     * @type {FactionSymbols}
+     * @type {FactionSymbol}
      * @memberof SystemFaction
      */
-    'symbol': FactionSymbols;
+    'symbol': FactionSymbol;
 }
 
 
 /**
- * The type of waypoint.
+ * The type of system.
  * @export
  * @enum {string}
  */
@@ -3922,6 +3950,7 @@ export const TradeSymbol = {
     MeritiumOre: 'MERITIUM_ORE',
     Hydrocarbon: 'HYDROCARBON',
     Antimatter: 'ANTIMATTER',
+    FabMats: 'FAB_MATS',
     Fertilizers: 'FERTILIZERS',
     Fabrics: 'FABRICS',
     Food: 'FOOD',
@@ -3943,9 +3972,9 @@ export const TradeSymbol = {
     Clothing: 'CLOTHING',
     Microprocessors: 'MICROPROCESSORS',
     Plastics: 'PLASTICS',
-    QuantumStabilizers: 'QUANTUM_STABILIZERS',
     Polynucleotides: 'POLYNUCLEOTIDES',
     Biocomposites: 'BIOCOMPOSITES',
+    QuantumStabilizers: 'QUANTUM_STABILIZERS',
     Nanobots: 'NANOBOTS',
     AiMainframes: 'AI_MAINFRAMES',
     QuantumDrives: 'QUANTUM_DRIVES',
@@ -3964,6 +3993,21 @@ export const TradeSymbol = {
     NovelLifeforms: 'NOVEL_LIFEFORMS',
     BotanicalSpecimens: 'BOTANICAL_SPECIMENS',
     CulturalArtifacts: 'CULTURAL_ARTIFACTS',
+    FrameProbe: 'FRAME_PROBE',
+    FrameDrone: 'FRAME_DRONE',
+    FrameInterceptor: 'FRAME_INTERCEPTOR',
+    FrameRacer: 'FRAME_RACER',
+    FrameFighter: 'FRAME_FIGHTER',
+    FrameFrigate: 'FRAME_FRIGATE',
+    FrameShuttle: 'FRAME_SHUTTLE',
+    FrameExplorer: 'FRAME_EXPLORER',
+    FrameMiner: 'FRAME_MINER',
+    FrameLightFreighter: 'FRAME_LIGHT_FREIGHTER',
+    FrameHeavyFreighter: 'FRAME_HEAVY_FREIGHTER',
+    FrameTransport: 'FRAME_TRANSPORT',
+    FrameDestroyer: 'FRAME_DESTROYER',
+    FrameCruiser: 'FRAME_CRUISER',
+    FrameCarrier: 'FRAME_CARRIER',
     ReactorSolarI: 'REACTOR_SOLAR_I',
     ReactorFusionI: 'REACTOR_FUSION_I',
     ReactorFissionI: 'REACTOR_FISSION_I',
@@ -3982,8 +4026,6 @@ export const TradeSymbol = {
     ModuleEnvoyQuartersI: 'MODULE_ENVOY_QUARTERS_I',
     ModulePassengerCabinI: 'MODULE_PASSENGER_CABIN_I',
     ModuleMicroRefineryI: 'MODULE_MICRO_REFINERY_I',
-    ModuleOreRefineryI: 'MODULE_ORE_REFINERY_I',
-    ModuleFuelRefineryI: 'MODULE_FUEL_REFINERY_I',
     ModuleScienceLabI: 'MODULE_SCIENCE_LAB_I',
     ModuleJumpDriveI: 'MODULE_JUMP_DRIVE_I',
     ModuleJumpDriveIi: 'MODULE_JUMP_DRIVE_II',
@@ -3993,6 +4035,8 @@ export const TradeSymbol = {
     ModuleWarpDriveIii: 'MODULE_WARP_DRIVE_III',
     ModuleShieldGeneratorI: 'MODULE_SHIELD_GENERATOR_I',
     ModuleShieldGeneratorIi: 'MODULE_SHIELD_GENERATOR_II',
+    ModuleOreRefineryI: 'MODULE_ORE_REFINERY_I',
+    ModuleFuelRefineryI: 'MODULE_FUEL_REFINERY_I',
     MountGasSiphonI: 'MOUNT_GAS_SIPHON_I',
     MountGasSiphonIi: 'MOUNT_GAS_SIPHON_II',
     MountGasSiphonIii: 'MOUNT_GAS_SIPHON_III',
@@ -4008,7 +4052,18 @@ export const TradeSymbol = {
     MountLaserCannonI: 'MOUNT_LASER_CANNON_I',
     MountMissileLauncherI: 'MOUNT_MISSILE_LAUNCHER_I',
     MountTurretI: 'MOUNT_TURRET_I',
-    FabMats: 'FAB_MATS'
+    ShipProbe: 'SHIP_PROBE',
+    ShipMiningDrone: 'SHIP_MINING_DRONE',
+    ShipSiphonDrone: 'SHIP_SIPHON_DRONE',
+    ShipInterceptor: 'SHIP_INTERCEPTOR',
+    ShipLightHauler: 'SHIP_LIGHT_HAULER',
+    ShipCommandFrigate: 'SHIP_COMMAND_FRIGATE',
+    ShipExplorer: 'SHIP_EXPLORER',
+    ShipHeavyFreighter: 'SHIP_HEAVY_FREIGHTER',
+    ShipLightShuttle: 'SHIP_LIGHT_SHUTTLE',
+    ShipOreHound: 'SHIP_ORE_HOUND',
+    ShipRefiningFreighter: 'SHIP_REFINING_FREIGHTER',
+    ShipSurveyor: 'SHIP_SURVEYOR'
 } as const;
 
 export type TradeSymbol = typeof TradeSymbol[keyof typeof TradeSymbol];
@@ -4061,7 +4116,7 @@ export interface TransferCargoRequest {
  */
 export interface Waypoint {
     /**
-     * Symbol fo the waypoint.
+     * The symbol of the waypoint.
      * @type {string}
      * @memberof Waypoint
      */
@@ -4073,7 +4128,7 @@ export interface Waypoint {
      */
     'type': WaypointType;
     /**
-     * The symbol of the system this waypoint belongs to.
+     * The symbol of the system.
      * @type {string}
      * @memberof Waypoint
      */
@@ -4143,10 +4198,10 @@ export interface Waypoint {
 export interface WaypointFaction {
     /**
      * 
-     * @type {FactionSymbols}
+     * @type {FactionSymbol}
      * @memberof WaypointFaction
      */
-    'symbol': FactionSymbols;
+    'symbol': FactionSymbol;
 }
 
 
@@ -4157,11 +4212,11 @@ export interface WaypointFaction {
  */
 export interface WaypointModifier {
     /**
-     * The unique identifier of the modifier.
-     * @type {string}
+     * 
+     * @type {WaypointModifierSymbol}
      * @memberof WaypointModifier
      */
-    'symbol': WaypointModifierSymbolEnum;
+    'symbol': WaypointModifierSymbol;
     /**
      * The name of the trait.
      * @type {string}
@@ -4176,7 +4231,14 @@ export interface WaypointModifier {
     'description': string;
 }
 
-export const WaypointModifierSymbolEnum = {
+
+/**
+ * The unique identifier of the modifier.
+ * @export
+ * @enum {string}
+ */
+
+export const WaypointModifierSymbol = {
     Stripped: 'STRIPPED',
     Unstable: 'UNSTABLE',
     RadiationLeak: 'RADIATION_LEAK',
@@ -4184,7 +4246,8 @@ export const WaypointModifierSymbolEnum = {
     CivilUnrest: 'CIVIL_UNREST'
 } as const;
 
-export type WaypointModifierSymbolEnum = typeof WaypointModifierSymbolEnum[keyof typeof WaypointModifierSymbolEnum];
+export type WaypointModifierSymbol = typeof WaypointModifierSymbol[keyof typeof WaypointModifierSymbol];
+
 
 /**
  * An orbital is another waypoint that orbits a parent waypoint.
@@ -4206,11 +4269,11 @@ export interface WaypointOrbital {
  */
 export interface WaypointTrait {
     /**
-     * The unique identifier of the trait.
-     * @type {string}
+     * 
+     * @type {WaypointTraitSymbol}
      * @memberof WaypointTrait
      */
-    'symbol': WaypointTraitSymbolEnum;
+    'symbol': WaypointTraitSymbol;
     /**
      * The name of the trait.
      * @type {string}
@@ -4225,7 +4288,14 @@ export interface WaypointTrait {
     'description': string;
 }
 
-export const WaypointTraitSymbolEnum = {
+
+/**
+ * The unique identifier of the trait.
+ * @export
+ * @enum {string}
+ */
+
+export const WaypointTraitSymbol = {
     Uncharted: 'UNCHARTED',
     UnderConstruction: 'UNDER_CONSTRUCTION',
     Marketplace: 'MARKETPLACE',
@@ -4234,6 +4304,7 @@ export const WaypointTraitSymbolEnum = {
     ScatteredSettlements: 'SCATTERED_SETTLEMENTS',
     SprawlingCities: 'SPRAWLING_CITIES',
     MegaStructures: 'MEGA_STRUCTURES',
+    PirateBase: 'PIRATE_BASE',
     Overcrowded: 'OVERCROWDED',
     HighTech: 'HIGH_TECH',
     Corrupt: 'CORRUPT',
@@ -4296,7 +4367,8 @@ export const WaypointTraitSymbolEnum = {
     Stripped: 'STRIPPED'
 } as const;
 
-export type WaypointTraitSymbolEnum = typeof WaypointTraitSymbolEnum[keyof typeof WaypointTraitSymbolEnum];
+export type WaypointTraitSymbol = typeof WaypointTraitSymbol[keyof typeof WaypointTraitSymbol];
+
 
 /**
  * The type of waypoint.
@@ -8144,7 +8216,7 @@ export const SystemsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async supplyConstruction(systemSymbol: string, waypointSymbol: string, supplyConstructionRequest?: SupplyConstructionRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SupplyConstruction200Response>> {
+        async supplyConstruction(systemSymbol: string, waypointSymbol: string, supplyConstructionRequest?: SupplyConstructionRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SupplyConstruction201Response>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.supplyConstruction(systemSymbol, waypointSymbol, supplyConstructionRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -8257,7 +8329,7 @@ export const SystemsApiFactory = function (configuration?: Configuration, basePa
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        supplyConstruction(systemSymbol: string, waypointSymbol: string, supplyConstructionRequest?: SupplyConstructionRequest, options?: any): AxiosPromise<SupplyConstruction200Response> {
+        supplyConstruction(systemSymbol: string, waypointSymbol: string, supplyConstructionRequest?: SupplyConstructionRequest, options?: any): AxiosPromise<SupplyConstruction201Response> {
             return localVarFp.supplyConstruction(systemSymbol, waypointSymbol, supplyConstructionRequest, options).then((request) => request(axios, basePath));
         },
     };
